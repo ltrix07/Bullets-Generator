@@ -1,5 +1,3 @@
-import time
-
 from __init__ import *
 from params import *
 from functions import read_json, write_json, read_file_lines, generate_bullets_process
