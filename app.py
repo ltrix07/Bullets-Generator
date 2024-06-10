@@ -176,7 +176,7 @@ def app():
                 break
     except Exception as error:
         print(error)
-        time.sleep(10)
+        input('Нажмите Enter для выхода')
 
 
 if __name__ == "__main__":
