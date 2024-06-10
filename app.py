@@ -174,7 +174,8 @@ def app():
 
             elif do == '8':
                 break
-    finally:
+    except Exception as error:
+        print(error)
         time.sleep(10)
 
 
