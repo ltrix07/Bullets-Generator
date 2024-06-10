@@ -1,0 +1,12 @@
+[
+    {
+        "shop_name": "bullets test",
+        "table_id": "1_OH61woS4G7zz0jJaBhRbBJTTBgyTUT4gWdFC1ZRdcI",
+        "worksheet": "test",
+        "columns": [
+            "bullet 1",
+            "bullet 2"
+        ],
+        "title_column": "product name"
+    }
+]
