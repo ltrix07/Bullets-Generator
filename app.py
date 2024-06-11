@@ -66,11 +66,13 @@ def app_start():
                 shops_info = read_json(INFO.get('db_paths').get('shops_info_path'))
                 for shop_dict in shops_info:
                     print('Name: ' + shop_dict['shop_name'])
-                    print('Table ID:' + shop_dict['table_id'])
+                    print('Table ID: ' + shop_dict['table_id'])
                     print('Worksheet: ' + shop_dict['worksheet'])
                     print('Columns: ' + str(shop_dict['columns']))
                     print('Title column: ' + shop_dict['title_column'])
                     print()
+
+                input('Нажмите Enter для выхода...')
 
             elif do == '3':
                 shops_info = read_json(INFO.get('db_paths').get('shops_info_path'))
@@ -199,3 +201,7 @@ def app_start():
     except Exception as error:
         print(error)
         input('Нажмите Enter для выхода')
+
+
+if __name__ == '__main__':
+    app_start()
