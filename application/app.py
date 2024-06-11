@@ -17,7 +17,7 @@ except Exception as e:
     raise
 
 
-def app():
+def app_start():
     try:
         while True:
             print(HELLO_MESSAGE)
@@ -189,7 +189,3 @@ def app():
     except Exception as error:
         print(error)
         input('Нажмите Enter для выхода')
-
-
-if __name__ == "__main__":
-    app()
