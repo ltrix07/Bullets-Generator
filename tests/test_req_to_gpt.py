@@ -1,4 +1,4 @@
-from functions import req_to_gpt, authorize_openai
+from app.functions import req_to_gpt, authorize_openai
 
 
 client = authorize_openai('../creds/openai_api_key.txt')

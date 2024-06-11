@@ -1,4 +1,4 @@
-from moduls import DataBase
+from app.moduls import DataBase
 
 db = DataBase('../db/data.db')
 
