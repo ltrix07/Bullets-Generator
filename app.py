@@ -64,13 +64,24 @@ def app_start():
 
             elif do == '2':
                 shops_info = read_json(INFO.get('db_paths').get('shops_info_path'))
-                for shop_dict in shops_info:
-                    print('Name: ' + shop_dict['shop_name'])
-                    print('Table ID: ' + shop_dict['table_id'])
-                    print('Worksheet: ' + shop_dict['worksheet'])
-                    print('Columns: ' + str(shop_dict['columns']))
-                    print('Title column: ' + shop_dict['title_column'])
-                    print()
+                print(
+                    '1. Вывести всю информацию\n'
+                    '2. Вывести только названия магазинов\n'
+                )
+                choice = input('Выберите действие: ').strip()
+                if choice == '1':
+                    for shop_dict in shops_info:
+                        print('Name: ' + shop_dict['shop_name'])
+                        print('Table ID: ' + shop_dict['table_id'])
+                        print('Worksheet: ' + shop_dict['worksheet'])
+                        print('Columns: ' + str(shop_dict['columns']))
+                        print('Title column: ' + shop_dict['title_column'])
+                        print()
+                elif choice == '2':
+                    for shop_dict in shops_info:
+                        print(shop_dict['shop_name'])
+                else:
+                    print('Такого действия нет')
 
                 input('Нажмите Enter для выхода...')
 
