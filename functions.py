@@ -21,32 +21,32 @@ except Exception as e:
 
 
 def read_file(file_path):
-    with open(file_path, 'r') as f:
+    with open(file_path, 'r', encoding='utf-8') as f:
         return f.read()
 
 
 def read_file_lines(file_path):
-    with open(file_path, 'r') as f:
+    with open(file_path, 'r', encoding='utf-8') as f:
         return f.readlines()
 
 
 def clear_file(file_path):
-    with open(file_path, 'w') as f:
+    with open(file_path, 'w', encoding='utf-8') as f:
         f.truncate()
 
 
 def read_json(file_path):
-    with open(file_path, 'r') as f:
+    with open(file_path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 
 def write_json(file_path, data):
-    with open(file_path, 'w') as f:
+    with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=4)
 
 
 def write_csv(file_path, data):
-    with open(file_path, 'w', newline='') as f:
+    with open(file_path, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerows(data)
 
