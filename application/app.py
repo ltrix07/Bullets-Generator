@@ -24,7 +24,7 @@ def app_start():
             do = input('Введите действие: ').strip()
 
             while True:
-                if do in ('1', '2', '3', '4', '5', '6', '7', '8'):
+                if do in ('1', '2', '3', '4', '5', '6', '7', '8', '9'):
                     break
                 else:
                     print('Такого действия нет')
@@ -64,6 +64,16 @@ def app_start():
 
             elif do == '2':
                 shops_info = read_json(INFO.get('db_paths').get('shops_info_path'))
+                for shop_dict in shops_info:
+                    print('Name: ' + shop_dict['shop_name'])
+                    print('Table ID:' + shop_dict['table_id'])
+                    print('Worksheet: ' + shop_dict['worksheet'])
+                    print('Columns: ' + str(shop_dict['columns']))
+                    print('Title column: ' + shop_dict['title_column'])
+                    print()
+
+            elif do == '3':
+                shops_info = read_json(INFO.get('db_paths').get('shops_info_path'))
                 google_creds = read_json(INFO.get('creds_paths').get('google_creds_path'))
 
                 print(f'Перед добавлением магазина дайте доступ к почте - {google_creds.get("client_email")}')
@@ -100,7 +110,7 @@ def app_start():
                     print('Магазин добавлен')
                     print()
 
-            elif do == '3':
+            elif do == '4':
                 shops_info = read_json(INFO.get('db_paths').get('shops_info_path'))
 
                 shop_name = input('Введите название магазина: ').strip().lower()
@@ -114,7 +124,7 @@ def app_start():
                 print('Магазин удален')
                 print()
 
-            elif do == '4':
+            elif do == '5':
                 while True:
                     black_list = read_json(INFO.get('db_paths').get('black_list_path'))
                     black_word = input('Введите запрещенное слово ("q" - выход): ').strip().lower()
@@ -128,7 +138,7 @@ def app_start():
                         print('Запрещенное слово добавлено')
                         print()
 
-            elif do == '5':
+            elif do == '6':
                 while True:
                     black_list = read_json(INFO.get('db_paths').get('black_list_path'))
                     print(
@@ -149,7 +159,7 @@ def app_start():
                     print('Запрещенные слова добавлены')
                     print()
 
-            elif do == '6':
+            elif do == '7':
                 while True:
                     black_list = read_json(INFO.get('db_paths').get('black_list_path'))
                     black_word = input('Введите запрещенное слово для удаления ("q" - выход): ').strip().lower()
@@ -163,7 +173,7 @@ def app_start():
                         print('Запрещенное слово удалено')
                         print()
 
-            elif do == '7':
+            elif do == '8':
                 while True:
                     black_list = read_json(INFO.get('db_paths').get('black_list_path'))
                     print(
@@ -184,7 +194,7 @@ def app_start():
                     print('Запрещенные слова удалены')
                     print()
 
-            elif do == '8':
+            elif do == '9':
                 break
     except Exception as error:
         print(error)
