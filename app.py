@@ -1,6 +1,20 @@
-from __init__ import *
-from params import *
-from functions import read_json, write_json, read_file_lines, generate_bullets_process
+try:
+    import os
+    import json
+    import re
+    import csv
+    import time
+    from datetime import datetime
+    from tqdm import tqdm
+    from google_sheets_utils.buid import GoogleSheets
+    from google_sheets_utils.text_handler import all_to_low_and_del_spc as to_low
+    from openai import OpenAI
+    from params import *
+    from functions import read_json, write_json, read_file_lines, generate_bullets_process
+except Exception as e:
+    print(f"Error: {e}")
+    input("Press Enter to continue...")
+    raise
 
 
 def app():
