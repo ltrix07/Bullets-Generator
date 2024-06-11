@@ -1,9 +1,12 @@
+import openai
+
 try:
     import os
     import json
     import re
     import csv
     import time
+    import traceback
     from datetime import datetime
     from tqdm import tqdm
     from google_sheets_utils.buid import GoogleSheets
@@ -65,18 +68,19 @@ def remove_forbidden_words(text, forbidden_words_path=INFO.get('db_paths').get('
     return re.sub(pattern, '', text, flags=re.IGNORECASE)
 
 
-def generate_bullets(gpt, titles, qty_bullets, row_start, promt_path=INFO.get('templates_paths').get('promt_template')):
+def generate_bullets(gpt, titles, qty_bullets, row_start, args, promt_path=INFO.get('templates_paths').get('promt_template')):
     promt_body = read_file(promt_path)
     model = INFO.get('gpt_model')
     client = gpt.authorize_openai()
     result = {'bullets': {}, 'tokens': 0}
     try:
         for title in tqdm(titles, desc='Генерация буллетов'):
-            promt_header = f'Создай {qty_bullets} буллетов для товарв "{title}". Результат в формате JSON. Используй следующие параметры при создании:'
+            promt_header = f'Создай {qty_bullets} буллетов для товарв "{title}". Результат в формате JSON словаря где кадому ключу соответсвует буллет в качестве значения. Используй следующие параметры при создании:'
             promt = f'{promt_header}\n{promt_body}'
             response = gpt.req_to_gpt(client=client, model=model, prompt=promt)
             content = response.choices[0].message.content
-            print(content)
+            if args.debug:
+                print(content)
             tokens = response.usage.total_tokens
 
             bullets: dict = json.loads(content)
@@ -91,25 +95,32 @@ def generate_bullets(gpt, titles, qty_bullets, row_start, promt_path=INFO.get('t
                 if col > qty_bullets - 1:
                     break
             result['tokens'] += tokens
-    finally:
-        all_bullets = []
-        for bullets in result['bullets'].values():
-            all_bullets.append(bullets)
-        file_name = collect_data_to_csv(all_bullets)
+    except openai.AuthenticationError:
+        print('Не удалось авторизоваться при помощи указанного API ключа.')
+        raise
+    except Exception as error:
+        if args.debug:
+            print(error)
+            traceback.print_exc()
+        else:
+            all_bullets = []
+            for bullets in result['bullets'].values():
+                all_bullets.append(bullets)
+            file_name = collect_data_to_csv(all_bullets)
 
-        print(f'К сожалению возникла ошибка при генерации.\n'
-              f'Буллеты, которые успели сгенерироваться находятся в файле {file_name}.\n'
-              f'При необходимости их можно перенести в таблицу вручную.\n'
-              f''
-              f'Всего потрачено токенов: {result["tokens"]}\n'
-              f'Успешно сгенерировано: {sum(len(bul) for bul in result["bullets"].values())} буллетов.\n'
-              f'Генерация начиналась со строки: {row_start}.')
+            print(f'К сожалению возникла ошибка при генерации.\n'
+                  f'Буллеты, которые успели сгенерироваться находятся в файле {file_name}.\n'
+                  f'При необходимости их можно перенести в таблицу вручную.\n'
+                  f''
+                  f'Всего потрачено токенов: {result["tokens"]}\n'
+                  f'Успешно сгенерировано: {sum(len(bul) for bul in result["bullets"].values())} буллетов.\n'
+                  f'Генерация начиналась со строки: {row_start}.')
 
     return result
 
 
 def generate_bullets_process(
-        shop_dict, row_start, row_end, google_creds_path=INFO.get('creds_paths').get('google_creds_path')
+        shop_dict, row_start, row_end, args, google_creds_path=INFO.get('creds_paths').get('google_creds_path')
 ):
     shop_name = shop_dict.get('shop_name')
     table_id = shop_dict.get('table_id')
@@ -133,7 +144,7 @@ def generate_bullets_process(
     titles = [elem[title_index] for elem in all_data_from_sheet[row_start - 1:row_end]]
 
     gpt = GPT()
-    bullets = generate_bullets(gpt, titles, len(columns), row_start)
+    bullets = generate_bullets(gpt, titles, len(columns), row_start, args)
 
     for col, bullet_list in bullets['bullets'].items():
         columns_indices[col]['data'] = bullet_list

@@ -4,6 +4,8 @@ try:
     import re
     import csv
     import time
+    import argparse
+    import traceback
     from datetime import datetime
     from tqdm import tqdm
     from google_sheets_utils.buid import GoogleSheets
@@ -17,7 +19,7 @@ except Exception as e:
     raise
 
 
-def app_start():
+def app_start(args):
     try:
         while True:
             print(HELLO_MESSAGE)
@@ -49,7 +51,7 @@ def app_start():
                 match_found = False
                 for shop_dict in shops_info:
                     if shop_dict['shop_name'] == shop_name:
-                        report = generate_bullets_process(shop_dict, row_start, row_end)
+                        report = generate_bullets_process(shop_dict, row_start, row_end, args)
                         match_found = True
                         print(
                             f'Обработан магазин: {shop_name}\n'
@@ -210,9 +212,15 @@ def app_start():
             elif do == '9':
                 break
     except Exception as error:
-        print(error)
-        input('Нажмите Enter для выхода')
+        if args.debug:
+            traceback.print_exc()
+        else:
+            print(error)
+            input('Нажмите Enter для выхода')
 
 
 if __name__ == '__main__':
-    app_start()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--debug', action='store_true', help='debug mode')
+    args = parser.parse_args()
+    app_start(args)
