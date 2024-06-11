@@ -72,7 +72,7 @@ def generate_bullets(gpt, titles, qty_bullets, row_start, promt_path=INFO.get('t
     result = {'bullets': {}, 'tokens': 0}
     try:
         for title in tqdm(titles, desc='Генерация буллетов'):
-            promt_header = f'Создай {qty_bullets} буллетов для товарв "{title}". Используй следующие параметры:'
+            promt_header = f'Создай {qty_bullets} буллетов для товарв "{title}". Результат в формате JSON. Используй следующие параметры при создании:'
             promt = f'{promt_header}\n{promt_body}'
             response = gpt.req_to_gpt(client=client, model=model, prompt=promt)
             content = response.choices[0].message.content
