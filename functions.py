@@ -76,6 +76,7 @@ def generate_bullets(gpt, titles, qty_bullets, row_start, promt_path=INFO.get('t
             promt = f'{promt_header}\n{promt_body}'
             response = gpt.req_to_gpt(client=client, model=model, prompt=promt)
             content = response.choices[0].message.content
+            print(content)
             tokens = response.usage.total_tokens
 
             bullets: dict = json.loads(content)
