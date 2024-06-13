@@ -85,7 +85,12 @@ def generate_bullets(gpt, titles, qty_bullets, row_start, args, promt_path=INFO.
                 print(content)
             tokens = response.usage.total_tokens
 
-            bullets: dict = json.loads(content)
+            try:
+                bullets: dict = json.loads(content)
+            except json.decoder.JSONDecodeError:
+                bullets = {}
+                for i in range(1, qty_bullets + 1):
+                    bullets[f'bullet{i}'] = ''
 
             col = 0
             for bullet in bullets.values():
