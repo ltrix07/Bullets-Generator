@@ -76,8 +76,8 @@ def generate_bullets(gpt, titles, qty_bullets, row_start, args, promt_path=INFO.
     result = {'bullets': {}, 'tokens': 0}
     try:
         for title in tqdm(titles, desc='Генерация буллетов'):
-            promt_header = (f'Создай {qty_bullets} буллетов для товарв "{title}". Результат в формате JSON словаря где '
-                            f'кадому ключу соответсвует буллет в качестве значения. Используй следующие параметры при'
+            promt_header = (f'Создай {qty_bullets} буллетов для товаров "{title}". Результат в формате JSON словаря где '
+                            f'каждому ключу соответствует буллет в качестве значения. Используй следующие параметры при'
                             f' создании:')
             promt = f'{promt_header}\n{promt_body}'
             if args.debug:
@@ -187,5 +187,3 @@ def generate_bullets_process(
         'tokens': bullets.get('tokens'),
         'update_sheet_status': status
     }
-
-
