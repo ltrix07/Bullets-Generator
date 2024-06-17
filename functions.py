@@ -167,9 +167,9 @@ def generate_bullets_process(
                     spreadsheet=table_id, worksheet=worksheet, indices=columns_indices
                 )
                 break
-            except HTTPError:
+            except HttpError:
                 time.sleep(5)
-    except HTTPError as e:
+    except HttpError as e:
         all_bullets = []
         for bullets in bullets['bullets'].values():
             all_bullets.append(bullets)
