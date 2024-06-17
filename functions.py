@@ -10,6 +10,7 @@ try:
     from datetime import datetime
     from tqdm import tqdm
     from google_sheets_utils.buid import GoogleSheets
+    from googleapiclient.errors import HttpError
     from google_sheets_utils.text_handler import all_to_low_and_del_spc as to_low
     from openai import OpenAI
     from params import *
@@ -75,7 +76,9 @@ def generate_bullets(gpt, titles, qty_bullets, row_start, args, promt_path=INFO.
     result = {'bullets': {}, 'tokens': 0}
     try:
         for title in tqdm(titles, desc='Генерация буллетов'):
-            promt_header = f'Создай {qty_bullets} буллетов для товарв "{title}". Результат в формате JSON словаря где кадому ключу соответсвует буллет в качестве значения. Используй следующие параметры при создании:'
+            promt_header = (f'Создай {qty_bullets} буллетов для товарв "{title}". Результат в формате JSON словаря где '
+                            f'кадому ключу соответсвует буллет в качестве значения. Используй следующие параметры при'
+                            f' создании:')
             promt = f'{promt_header}\n{promt_body}'
             if args.debug:
                 print(promt)
@@ -156,9 +159,20 @@ def generate_bullets_process(
     for col, bullet_list in bullets['bullets'].items():
         columns_indices[col]['data'] = bullet_list
 
-    status = google_sheet.update_sheet_by_indices(
-        spreadsheet=table_id, worksheet=worksheet, indices=columns_indices
-    )
+    status = False
+    try:
+        for i in range(5):
+            try:
+                status = google_sheet.update_sheet_by_indices(
+                    spreadsheet=table_id, worksheet=worksheet, indices=columns_indices
+                )
+                break
+            except HTTPError:
+                time.sleep(5)
+    except HTTPError as e:
+        print(f'Не удалось обновить таблицу {table_id} в гугл таблицах.\n'
+              f'Ошибка сети, проверьте подключение к интернету.\n'
+              f'Тип ошибки: {e}')
 
     return {
         'shop_name': shop_name,

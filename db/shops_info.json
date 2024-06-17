@@ -8,5 +8,16 @@
             "bullet 2"
         ],
         "title_column": "product name"
+    },
+    {
+        "shop_name": "lana test",
+        "table_id": "1G8QIQfUx0W0IKXHrRWRCtx3EyJtNwoUKktzMzao77Qo",
+        "worksheet": "LISTINGS",
+        "columns": [
+            "Bullet2",
+            "Bullet3",
+            "Bullet4"
+        ],
+        "title_column": "TITLE EBAY"
     }
 ]
