@@ -170,9 +170,15 @@ def generate_bullets_process(
             except HTTPError:
                 time.sleep(5)
     except HTTPError as e:
+        all_bullets = []
+        for bullets in bullets['bullets'].values():
+            all_bullets.append(bullets)
+        file_name = collect_data_to_csv(all_bullets)
         print(f'Не удалось обновить таблицу {table_id} в гугл таблицах.\n'
               f'Ошибка сети, проверьте подключение к интернету.\n'
               f'Тип ошибки: {e}')
+        print()
+        print(f'Файл с генерированными буллетами: {file_name}')
 
     return {
         'shop_name': shop_name,
