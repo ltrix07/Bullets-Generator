@@ -1,5 +1,3 @@
-import openai
-
 try:
     import os
     import json
@@ -7,6 +5,7 @@ try:
     import csv
     import time
     import traceback
+    import openai
     from datetime import datetime
     from tqdm import tqdm
     from google_sheets_utils.buid import GoogleSheets
@@ -159,26 +158,14 @@ def generate_bullets_process(
     for col, bullet_list in bullets['bullets'].items():
         columns_indices[col]['data'] = bullet_list
 
-    status = False
-    try:
-        for i in range(5):
-            try:
-                status = google_sheet.update_sheet_by_indices(
-                    spreadsheet=table_id, worksheet=worksheet, indices=columns_indices
-                )
-                break
-            except HttpError:
-                time.sleep(5)
-    except HttpError as e:
-        all_bullets = []
-        for bullets in bullets['bullets'].values():
-            all_bullets.append(bullets)
-        file_name = collect_data_to_csv(all_bullets)
-        print(f'Не удалось обновить таблицу {table_id} в гугл таблицах.\n'
-              f'Ошибка сети, проверьте подключение к интернету.\n'
-              f'Тип ошибки: {e}')
-        print()
-        print(f'Файл с генерированными буллетами: {file_name}')
+    if args.debug:
+        print(columns_indices)
+
+    status = google_sheet.update_sheet_by_indices(
+        spreadsheet=table_id, worksheet=worksheet, indices=columns_indices
+    )
+    if args.debug:
+        print(status)
 
     return {
         'shop_name': shop_name,
