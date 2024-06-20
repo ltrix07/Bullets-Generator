@@ -1,5 +1,5 @@
 INFO = {
-    'version': '0.1.1',
+    'version': '0.1.2',
     'gpt_model': 'gpt-3.5-turbo-0125',
     'creds_paths': {
         'google_creds_path': './creds/google_creds.json',
