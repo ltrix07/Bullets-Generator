@@ -65,7 +65,8 @@ def collect_data_to_csv(data):
 def remove_forbidden_words(text, forbidden_words_path=INFO.get('db_paths').get('black_list_path')):
     forbidden_words = read_json(forbidden_words_path)
     pattern = '|'.join(re.escape(word) for word in forbidden_words)
-    return re.sub(pattern, '', text, flags=re.IGNORECASE)
+    cleaned_text = re.sub(pattern, '', text, flags=re.IGNORECASE)
+    return re.sub(r'\s{2,}', ' ', cleaned_text).strip()
 
 
 def generate_bullets(gpt, titles, qty_bullets, row_start, args, promt_path=INFO.get('templates_paths').get('promt_template')):
@@ -97,9 +98,9 @@ def generate_bullets(gpt, titles, qty_bullets, row_start, args, promt_path=INFO.
             col = 0
             for bullet in bullets.values():
                 if result['bullets'].get(col) is None:
-                    result['bullets'][col] = [[bullet]]
+                    result['bullets'][col] = [[remove_forbidden_words(bullet)]]
                 else:
-                    result['bullets'][col].append([bullet])
+                    result['bullets'][col].append([remove_forbidden_words(bullet)])
                 col += 1
                 if col > qty_bullets - 1:
                     break
